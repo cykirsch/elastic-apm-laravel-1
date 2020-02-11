@@ -3,8 +3,10 @@
 namespace AG\ElasticApmLaravel;
 
 use AG\ElasticApmLaravel\Collectors\DBQueryCollector;
+use AG\ElasticApmLaravel\Collectors\FrameworkCollector;
 use AG\ElasticApmLaravel\Collectors\HttpRequestCollector;
 use AG\ElasticApmLaravel\Collectors\Interfaces\DataCollectorInterface;
+use AG\ElasticApmLaravel\Collectors\JobCollector;
 use AG\ElasticApmLaravel\Collectors\SpanCollector;
 use AG\ElasticApmLaravel\Events\LazySpan;
 use Illuminate\Foundation\Application;
@@ -46,12 +48,24 @@ class Agent extends PhilKraAgent
             );
         }
 
+        // Laravel init collector
+        $this->collectors->put(
+            FrameworkCollector::getName(),
+            new FrameworkCollector($app, $this->request_start_time)
+        );
+
         // Http request collector
         $this->collectors->put(
             HttpRequestCollector::getName(),
             new HttpRequestCollector($app, $this->request_start_time)
         );
 
+        // Job collector
+        $this->collectors->put(
+            JobCollector::getName(),
+            new JobCollector($app, $this, $this->request_start_time)
+        );
+        
         // Collector for manual measurements throughout the app
         $this->collectors->put(
             SpanCollector::getName(),
