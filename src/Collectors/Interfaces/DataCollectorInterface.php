@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 
 interface DataCollectorInterface
 {
-    public function collect(): Collection;
+    public function collect(string $transaction_name): Collection;
 
     public static function getName(): string;
 }

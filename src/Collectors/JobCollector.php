@@ -68,7 +68,6 @@ class JobCollector extends TimelineDataCollector implements DataCollectorInterfa
         try {
             // Stop the transaction and measure the time
             $this->agent->stopTransaction($transactionName);
-            $this->agent->sendTransaction($transactionName);
         } catch (Throwable $t) {
             Log::error($t->getMessage());
         }

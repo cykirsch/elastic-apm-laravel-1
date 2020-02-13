@@ -82,7 +82,6 @@ class RecordTransaction
 
             // Stop the transaction and measure the time
             $this->agent->stopTransaction($transaction_name);
-            $this->agent->sendTransaction($transaction_name);
         } catch (Throwable $t) {
             Log::error($t->getMessage());
         }
@@ -97,7 +96,8 @@ class RecordTransaction
         return $this->agent->startTransaction(
             $transaction_name,
             [],
-            $_SERVER['REQUEST_TIME_FLOAT'] ?? microtime(true)
+            // $_SERVER['REQUEST_TIME_FLOAT'] ?? microtime(true)
+            microtime(true)
         );
     }
 

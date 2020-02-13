@@ -30,7 +30,7 @@ class FrameworkCollector extends TimelineDataCollector implements DataCollectorI
         // Application and Laravel startup times
         // LARAVEL_START is defined at the entry point of the application
         // https://github.com/laravel/laravel/blob/master/public/index.php#L10
-        $this->startMeasure('app_boot', 'app', 'boot', 'App boot', LARAVEL_START);
+        $this->startMeasure('app_boot', 'app', 'boot', 'App boot'); //, LARAVEL_START);
 
         $this->app->booting(function () {
             $this->startMeasure('laravel_boot', 'laravel', 'boot', 'Laravel boot');

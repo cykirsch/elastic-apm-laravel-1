@@ -2,6 +2,7 @@
 
 namespace AG\ElasticApmLaravel\Collectors;
 
+use AG\ElasticApmLaravel\Agent;
 use AG\ElasticApmLaravel\Collectors\Interfaces\DataCollectorInterface;
 use Exception;
 use Illuminate\Database\Events\QueryExecuted;
@@ -20,6 +21,8 @@ class DBQueryCollector extends TimelineDataCollector implements DataCollectorInt
         parent::__construct($request_start_time);
 
         $this->app = $app;
+        $this->agent = app(Agent::class);
+
         $this->registerEventListeners();
     }
 
@@ -31,7 +34,7 @@ class DBQueryCollector extends TimelineDataCollector implements DataCollectorInt
             }
         }
 
-        $start_time = microtime(true) - $this->request_start_time - $query->time / 1000;
+        $start_time = microtime(true) - $this->getTransactionStartTime($this->agent->getLatestTransactionName()) - $query->time / 1000;
         $end_time = $start_time + $query->time / 1000;
 
         $query = [
@@ -54,7 +57,8 @@ class DBQueryCollector extends TimelineDataCollector implements DataCollectorInt
             $query['end'],
             $query['type'],
             $query['action'],
-            $query['context']
+            $query['context'],
+            $this->agent->getLatestTransactionName()
         );
     }
 

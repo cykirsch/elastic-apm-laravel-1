@@ -55,7 +55,8 @@ class ServiceProvider extends BaseServiceProvider
     protected function registerAgent(): void
     {
         $this->app->singleton(Agent::class, function () {
-            $start_time = $this->app['request']->server('REQUEST_TIME_FLOAT') ?? microtime(true);
+            // $start_time = $this->app['request']->server('REQUEST_TIME_FLOAT') ?? microtime(true);
+            $start_time = microtime(true);
 
             return new Agent($this->getAgentConfig(), $start_time);
         });
